@@ -1,0 +1,10 @@
+(HC) You are designing a spelling game to be used as a fun way for children to practice pronouncing words
+better at home with the halp of their parents . There two main user groups: The parents and the Children.
+Write a persona description for the parent.
+
+Phil Baker is a fifty year old man, who has worked at I.B.M. (Computer manufacturing company) for the
+past ten years. He graduated from Massachusetts Institute of Technology with a masters degree. He is a
+father of three children, the youngest being a six year old girl. He is comfortable using computer systems.
+He was born in China. Because of this he is not fluent in english as it is not his first language. He has
+ poor vision due to eye strain and aging. He is happy to assist his children with their pronunciation 
+ especially with the help of a spelling game.
