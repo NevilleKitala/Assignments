@@ -1,0 +1,14 @@
+Neville Mwawasi Kitala
+
+(HC) Imagine the HCI for a new set of augmented reality sports glasses for elite cyclists.
+Explain the design choices you would make to create useful and usable interface for the
+ cyclist thinking especially about reducing the gulf of evaluation and gulf of execution.
+ 
+The augmented reality functionality in pro cyclist glasses must be implemented in such a manner
+that it is not too distracting to the cyclist. This can be achieved by the use of arrows
+to assist with navigation which could be accompanied by an audio description of the intended 
+route. The colors should be bright so that it is visible but not distracting, for example,
+white. The ability to use voice commands to turn the display on and off depending on whether
+the cyclists wants it on or not is neccesary. Information about distance covered and speed
+of the cyclist can also be displayed, however this needs to be small so it does not interfere
+ with the cyclists field of view.

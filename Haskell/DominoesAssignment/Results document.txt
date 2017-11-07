@@ -1,0 +1,87 @@
+Test Results
+
+The following are tests to see the working of Domino data structures, Which include a Board, a Hand, a Domino and an End.
+
+These are the results obtained from the tests:
+
+1. goesP
+
+Method tests whether a domino can be played on one end of the board:
+
+*Main> board = [(5,3),(3,4),(5,5)]
+*Main> domino = (5,4)
+*Main> goesP domino board RightEnd
+True
+*Main> goesP domino board LeftEnd
+False
+
+2. knockingP
+
+Tests wether there is a domino in hand which can be played
+
+*Main> board = [(5,3),(3,4),(5,5)]
+*Main> hand = [(5,6),(1,2),(3,5),(6,5)]
+*Main> knockingP hand board
+False
+*Main> hand = [(0,6),(1,2),(3,2),(6,1)]
+*Main> knockingP hand board
+True
+
+3. playedP
+Tests whether a given domino has already been played on the board
+
+*Main> board = [(5,3),(3,4),(5,5)]
+*Main> domino = (5,4)
+*Main> playedP domino board
+False
+*Main> domino = (5,3)
+*Main> playedP domino board
+True
+
+4. possPlays
+
+Returns a list of all the dominos in hand that can be played at a certain position
+
+*Main> hand = [(0,6),(1,2),(4,5),(5,4)]
+*Main> board = [(5,3),(3,4),(5,5)]
+*Main> possPlays hand board
+[((5,4),RightEnd),((4,5),LeftEnd)]
+
+5. playDom
+puts a domino in a the board and produces a new board
+
+*Main> domino = (5,4)
+*Main> board = [(5,3),(3,4),(5,5)]
+*Main> newBoard = playDom domino hand LeftEnd
+*Main> newBoard = playDom domino board LeftEnd
+*Main> newBoard
+Nothing
+*Main> newBoard = playDom domino board RightEnd
+*Main> newBoard
+Just [(5,3),(3,4),(5,5),(5,4)]
+
+6. scoreBoard
+
+Calculates the score on the current board
+
+*Main> board = [(5,3),(3,4),(5,5)]
+*Main> scoreBoard board
+8
+*Main> board = [(5,3),(3,4),(5,6)]
+*Main> scoreBoard board
+0
+*Main> board = [(5,3),(3,4),(4,5)]
+*Main> scoreBoard board
+2
+
+7. scoreN
+
+Returns a list of dominos that would give the score provided in the function and the end to which they would be played
+
+*Main> board = [(5,5),(5,5),(0,0),(6,5)]
+*Main> scoreN board 2
+[((0,5),RightEnd),((1,5),LeftEnd),((2,5),RightEnd),((3,5),RightEnd),((4,5),RightEnd),((5,6),LeftEnd)]
+*Main> scoreN board 1
+[((0,5),LeftEnd)]
+*Main> scoreN board 3
+[((4,5),LeftEnd)]

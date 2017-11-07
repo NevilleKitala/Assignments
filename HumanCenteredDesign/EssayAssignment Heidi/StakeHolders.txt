@@ -1,0 +1,11 @@
+Neville Kitala Mwawasi
+
+(HC)You are designing a monitoring system for premature babies in the neotal ward in hospital.
+Who are the primary ,secondary ,tertiary and facilitating stakeholders you will need to involve and why?
+
+The primary stakeholders are those directly using the system. The stakeholders involved in the monitoring
+system of the premature babies include the hospital, doctors and nurses that are taking care of them. Another primary stakeholder would be the engineer who makes the system. On the
+other hand secondary stakeholders are the direct beneficiaries of the system . In this case this includes
+the babies and their parents. This is because through the use of the monitoring
+system the babies can grow to maturity. A tertiary stakeholder in this case would be the government. This is
+because they benefit through an increase in population due to succesful premature births.
