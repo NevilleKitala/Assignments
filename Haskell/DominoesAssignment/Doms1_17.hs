@@ -363,3 +363,39 @@ module Doms1 where
  
  hand1 :: Hand
  hand1 = [(3,3),(1,2),(3,5),(4,3),(0,0),(4,4)]
+ 
+ 
+ 
+ {- COM2001 2017-18
+  Assignment 2: dominoes 
+ -}
+ 
+ type Player = [Dom]--Domino player
+ 
+ data Turn = One|Two -- Defining player Turns
+            deriving (Eq,Show)
+
+---------------------------------------------------------------------
+--Distribute
+
+--Distribute nine dominos to players and returns a player
+
+ distribute :: [Dom]->Int->Player
+ 
+ distribute [] _= []
+ 
+ distribute (h:t) b
+  |(b - length t) <= 9 = h:distribute (t) b
+  |otherwise = [] ; 
+
+---------------------------------------------------------------------
+--removeDoms
+
+
+-- Remove Dominos from Hand and returns a new List
+
+ removeDoms :: [Dom] -> [Dom]
+ 
+ removeDoms [] = []
+ 
+ removeDoms a = drop 9 a
