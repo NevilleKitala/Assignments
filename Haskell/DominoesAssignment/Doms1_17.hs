@@ -370,7 +370,7 @@ module Doms1 where
   Assignment 2: dominoes 
  -}
  
- type Player = [Dom]--Domino player
+ type DomsPlayer = [Dom]--Domino player
  
  data Turn = One|Two -- Defining player Turns
             deriving (Eq,Show)
@@ -380,13 +380,13 @@ module Doms1 where
 
 --Distribute nine dominos to players and returns a player
 
- distribute :: [Dom]->Int->Player
+ distribute :: [Dom]->Int->DomsPlayer
  
  distribute [] _= []
  
  distribute (h:t) b
   |(b - length t) <= 9 = h:distribute (t) b
-  |otherwise = [] ; 
+  |otherwise = []
 
 ---------------------------------------------------------------------
 --removeDoms
@@ -394,8 +394,29 @@ module Doms1 where
 
 -- Remove Dominos from Hand and returns a new List
 
- removeDoms :: [Dom] -> [Dom]
+ removeDoms :: [Dom]->[Dom]
  
  removeDoms [] = []
  
  removeDoms a = drop 9 a
+ 
+---------------------------------------------------------------------
+
+--Player Functions
+
+ --Simple Domino Player which will play the first domino in its hand.
+
+ simplePlayer :: DomsPlayer->Board->Board
+ 
+ simplePlayer [] [] = []
+ 
+ simplePlayer [h:t] b
+  |goesLP == True = playLeft h b
+  |goesRP == True = playRight h b
+  |otherwise = b
+
+--Highest Scroring Domino which will play the domino that score the highest.
+
+-- hsdPlayer :: DomsPlayer->Board->Board
+ 
+hsDoms
