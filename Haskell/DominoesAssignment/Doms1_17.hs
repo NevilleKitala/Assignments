@@ -1,5 +1,8 @@
-module Doms1 where
 
+module Doms1 where
+ import System.Random
+ import Data.List
+ 
 {- COM2001 2017-18
   Assignment 1: dominoes 
   includes variants with mapping fns & comprehensions
@@ -410,13 +413,24 @@ module Doms1 where
  
  simplePlayer [] [] = []
  
- simplePlayer [h:t] b
-  |goesLP == True = playLeft h b
-  |goesRP == True = playRight h b
+ simplePlayer (h:t) b
+  |goesLP h b== True = playLeft h b
+  |goesRP h b== True = playRight h b
   |otherwise = b
 
 --Highest Scroring Domino which will play the domino that score the highest.
 
 -- hsdPlayer :: DomsPlayer->Board->Board
+
+---------------------------------------------------------------------
+
+ --shuffle Functions
+ --Functions to enable the board to be shuffled
  
-hsDoms
+ --Generates a list of 26 random intergers with a ass its seed
+ randGen :: Int->[Dom]->[Dom]
+ 
+ randGen a b =  map fst (sortBy (\((_,_),n1) ((_,_),n2) 
+  -> compare (n1) (n2)) (zip b (take 26 (randoms (mkStdGen a):: [Int]))))
+ 
+ --Zip random
