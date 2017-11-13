@@ -425,14 +425,18 @@ module Doms1 where
  domListScore (h:t) b 
   |goesLP h b== True = domScore h L:domListScore t b
   |goesRP h b== True = domScore h R:domListScore t b
-  |otherwise = domListScore t b
+  |otherwise = 0:domListScore t b
 
  maxScoreDom :: [Int]->[Dom]->Dom
   
  maxScoreDom a b = fst(maximumBy(\((_,_),n1) ((_,_),n2) 
   -> compare (n1) (n2)) (zip b a))
--- hsdPlayer :: DomsPlayer->Board->Board
 
+
+ hsdPlayer :: DomsPlayer
+ 
+ hsdPlayer a b = maxScoreDom (domListScore a b) a
+ 
 ---------------------------------------------------------------------
 
  --shuffle Functions
@@ -446,3 +450,31 @@ module Doms1 where
   -> compare (n1) (n2)) (zip b (take 26 (randoms (mkStdGen a):: [Int]))))
  
 ---------------------------------------------------------------------
+
+ --GamePlay Functions
+ --Functions to simulate the game being played
+ 
+ --Variables for the players scores
+ 
+ scoreLis1 = []
+ scoreLis2 = []
+
+ --Functions to simulate the games being played
+ 
+ changeTurn :: Turn->Turn
+ 
+ changeTurn  a
+  |a == One = Two
+  |a == Two = One
+  |otherwise = One
+  
+ countPlayerScore :: Turn->Dom->Board->[Int]
+ 
+ countPlayerScore a _ [] = []
+ 
+ countPlayerScore a b c
+  |a == One && goesLP b c==True = domScore b L: scoreLis1
+  |a == Two && goesLP b c==True = domScore b L: scoreLis2
+  |a == One && goesRP b c==True = domScore b R: scoreLis1
+  |a == Two && goesRP b c==True = domScore b R: scoreLis2
+  |otherwise = []
