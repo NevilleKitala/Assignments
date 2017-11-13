@@ -373,7 +373,7 @@ module Doms1 where
   Assignment 2: dominoes 
  -}
  
- type DomsPlayer = [Dom]--Domino player
+ type DomsPlayer = Hand->Board->Dom--Domino player
  
  data Turn = One|Two -- Defining player Turns
             deriving (Eq,Show)
@@ -383,7 +383,7 @@ module Doms1 where
 
 --Distribute nine dominos to players and returns a player
 
- distribute :: [Dom]->Int->DomsPlayer
+ distribute :: [Dom]->Int->Hand
  
  distribute [] _= []
  
@@ -409,17 +409,28 @@ module Doms1 where
 
  --Simple Domino Player which will play the first domino in its hand.
 
- simplePlayer :: DomsPlayer->Board->Board
- 
- simplePlayer [] [] = []
+ simplePlayer :: DomsPlayer
  
  simplePlayer (h:t) b
-  |goesLP h b== True = playLeft h b
-  |goesRP h b== True = playRight h b
-  |otherwise = b
+  |goesLP h b== True = h
+  |goesRP h b== True = h
+  |otherwise = simplePlayer t b
 
 --Highest Scroring Domino which will play the domino that score the highest.
 
+ domListScore :: Hand->Board->[Int]
+ 
+ domListScore [] [] = []
+ 
+ domListScore (h:t) b 
+  |goesLP h b== True = domScore h L:domListScore t b
+  |goesRP h b== True = domScore h R:domListScore t b
+  |otherwise = domListScore t b
+
+ maxScoreDom :: [Int]->[Dom]->Dom
+  
+ maxScoreDom a b = fst(maximumBy(\((_,_),n1) ((_,_),n2) 
+  -> compare (n1) (n2)) (zip b a))
 -- hsdPlayer :: DomsPlayer->Board->Board
 
 ---------------------------------------------------------------------
@@ -427,10 +438,11 @@ module Doms1 where
  --shuffle Functions
  --Functions to enable the board to be shuffled
  
- --Generates a list of 26 random intergers with a ass its seed
- randGen :: Int->[Dom]->[Dom]
+ --shuffles the domset
  
- randGen a b =  map fst (sortBy (\((_,_),n1) ((_,_),n2) 
+ shuffleDom :: Int->[Dom]->[Dom]
+ 
+ shuffleDom a b =  map fst (sortBy (\((_,_),n1) ((_,_),n2) 
   -> compare (n1) (n2)) (zip b (take 26 (randoms (mkStdGen a):: [Int]))))
  
- --Zip random
+---------------------------------------------------------------------
