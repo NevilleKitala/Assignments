@@ -379,32 +379,6 @@ module Doms1 where
             deriving (Eq,Show)
 
 ---------------------------------------------------------------------
---Distribute
-
---Distribute nine dominos to players and returns a player
-
- distribute :: [Dom]->Int->Hand
- 
- distribute [] _= []
- 
- distribute (h:t) b
-  |(b - length t) <= 9 = h:distribute (t) b
-  |otherwise = []
-
----------------------------------------------------------------------
---removeDoms
-
-
--- Remove Dominos from Hand and returns a new List
-
- removeDoms :: [Dom]->[Dom]
- 
- removeDoms [] = []
- 
- removeDoms a = drop 9 a
- 
----------------------------------------------------------------------
-
 --Player Functions
 
  --Simple Domino Player which will play the first domino in its hand.
@@ -456,25 +430,22 @@ module Doms1 where
  
  --Variables for the players scores
  
- scoreLis1 = []
- scoreLis2 = []
-
- --Functions to simulate the games being played
+ --Count Player score afterPlay
+ countPlayerScore :: Dom->Board->Int
  
- changeTurn :: Turn->Turn
+ countPlayerScore  _ [] = []
  
- changeTurn  a
-  |a == One = Two
-  |a == Two = One
-  |otherwise = One
-  
- countPlayerScore :: Turn->Dom->Board->[Int]
+ countPlayerScore b c
+  |goesLP b c==True = domScore b L
+  |goesLP b c==True = domScore b L
+  |goesRP b c==True = domScore b R
+  |goesRP b c==True = domScore b R
+  |otherwise = 0
  
- countPlayerScore a _ [] = []
+ playDomsRound :: SimplePlayer->SimplePlayer->Int->Hand
  
- countPlayerScore a b c
-  |a == One && goesLP b c==True = domScore b L: scoreLis1
-  |a == Two && goesLP b c==True = domScore b L: scoreLis2
-  |a == One && goesRP b c==True = domScore b R: scoreLis1
-  |a == Two && goesRP b c==True = domScore b R: scoreLis2
-  |otherwise = []
+ playDomsRound a b c d e
+  |a == [] && b == [] = playDomsRounds (take 9 (shuffleDom c domSet)) b (take 9 (drop 9 (shuffleDom c domSet))) d e
+  |length a >= c = 
+  |length a < c = 
+  |otherwise = b
