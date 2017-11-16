@@ -38,6 +38,9 @@ module Doms1 where
  type Hand = [Dom] -- doms in player's hand
  
  type Board = [Dom] -- doms played: head of board is left end, last is right end. Order maintained e.g [(1,6),(6,6),(6,3), (3,1)]
+ 
+ board :: Board
+ board = []
 
  type DomList = [Dom] -- list of Doms which is neither a Hand or a Board
  
@@ -367,13 +370,17 @@ module Doms1 where
  hand1 :: Hand
  hand1 = [(3,3),(1,2),(3,5),(4,3),(0,0),(4,4)]
  
- 
+ remove :: Eq a => a->[a]->[a]
+ remove _ [] = []   
+ remove x (h:t)         
+  |x==h = remove x t       
+  |otherwise = (h:remove x t)
  
  {- COM2001 2017-18
   Assignment 2: dominoes 
  -}
  
- type DomsPlayer = Hand->Board->Dom--Domino player
+ type DomsPlayer = Hand->Board->(Dom,End)--Domino player
  
  data Turn = One|Two -- Defining player Turns
             deriving (Eq,Show)
@@ -386,8 +393,8 @@ module Doms1 where
  simplePlayer :: DomsPlayer
  
  simplePlayer (h:t) b
-  |goesLP h b== True = h
-  |goesRP h b== True = h
+  |goesLP h b== True = (h,L)
+  |goesRP h b== True = (h,R)
   |otherwise = simplePlayer t b
 
 --Highest Scroring Domino which will play the domino that score the highest.
@@ -407,9 +414,9 @@ module Doms1 where
   -> compare (n1) (n2)) (zip b a))
 
 
- hsdPlayer :: DomsPlayer
+ --hsdPlayer :: DomsPlayer
  
- hsdPlayer a b = maxScoreDom (domListScore a b) a
+ --hsdPlayer a b = maxScoreDom (domListScore a b) a
  
 ---------------------------------------------------------------------
 
@@ -429,11 +436,13 @@ module Doms1 where
  --Functions to simulate the game being played
  
  --Variables for the players scores
- 
+ score1 = 0
+ score2 = 0
+
  --Count Player score afterPlay
  countPlayerScore :: Dom->Board->Int
  
- countPlayerScore  _ [] = []
+ countPlayerScore  _ [] = 0
  
  countPlayerScore b c
   |goesLP b c==True = domScore b L
@@ -442,10 +451,10 @@ module Doms1 where
   |goesRP b c==True = domScore b R
   |otherwise = 0
  
- playDomsRound :: SimplePlayer->SimplePlayer->Int->Hand
- 
- playDomsRound a b c d e
-  |a == [] && b == [] = playDomsRounds (take 9 (shuffleDom c domSet)) b (take 9 (drop 9 (shuffleDom c domSet))) d e
-  |length a >= c = 
-  |length a < c = 
-  |otherwise = b
+ playTurn :: Hand->Hand->Board->Int->(Board,Hand)
+
+ playTurn a b c d
+  |a== [] && c == [] = playTurn (take 9 (shuffleDom d domSet)) b c d
+  |b== [] && c== [] = playTurn a (take 9 (drop 9 (shuffleDom d domSet))) c d
+  |length a >= length b = (resMaybe (playDom (fst(simplePlayer a c)) (snd(simplePlayer a c)) c),(remove (fst(simplePlayer a c)) a))
+  |otherwise = ((resMaybe (playDom (fst(simplePlayer b c)) (snd(simplePlayer b c)) c)),(remove (fst(simplePlayer b c)) b))
