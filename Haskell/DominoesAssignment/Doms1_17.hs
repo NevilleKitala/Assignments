@@ -425,36 +425,48 @@ module Doms1 where
  
  --shuffles the domset
  
- shuffleDom :: Int->[Dom]->[Dom]
+ shuffleDom :: Int->[Dom]
  
- shuffleDom a b =  map fst (sortBy (\((_,_),n1) ((_,_),n2) 
-  -> compare (n1) (n2)) (zip b (take 26 (randoms (mkStdGen a):: [Int]))))
+ shuffleDom a =  map fst (sortBy (\((_,_),n1) ((_,_),n2) 
+  -> compare (n1) (n2)) (zip domSet (take 26 (randoms (mkStdGen a):: [Int]))))
  
 ---------------------------------------------------------------------
 
  --GamePlay Functions
  --Functions to simulate the game being played
  
- --Variables for the players scores
- score1 = 0
- score2 = 0
+ --add scores
+ add :: (Int,Int)->(Int,Int)->(Int,Int)
+ 
+ add (a,b) (a1,b1)=(a+a1,b+b1)
+ 
+ --Variable for the player scores
+ 
+ score = (0,0)
 
  --Count Player score afterPlay
- countPlayerScore :: Dom->Board->Int
+ countPlayerScore :: (Dom,End)->Board->Int
  
  countPlayerScore  _ [] = 0
  
- countPlayerScore b c
-  |goesLP b c==True = domScore b L
-  |goesLP b c==True = domScore b L
-  |goesRP b c==True = domScore b R
-  |goesRP b c==True = domScore b R
+ countPlayerScore (a,b) c
+  |b == L && goesLP a c== True = domScore a L
+  |b == L && goesRP a c==True = domScore a R
   |otherwise = 0
  
- playTurn :: Hand->Hand->Board->Int->(Board,Hand)
+ --play one turn
+ playTurn :: Hand->Hand->Board->Turn->(Int,Int)
 
- playTurn a b c d
-  |a== [] && c == [] = playTurn (take 9 (shuffleDom d domSet)) b c d
-  |b== [] && c== [] = playTurn a (take 9 (drop 9 (shuffleDom d domSet))) c d
-  |length a >= length b = (resMaybe (playDom (fst(simplePlayer a c)) (snd(simplePlayer a c)) c),(remove (fst(simplePlayer a c)) a))
-  |otherwise = ((resMaybe (playDom (fst(simplePlayer b c)) (snd(simplePlayer b c)) c)),(remove (fst(simplePlayer b c)) b))
+ playTurn b d e f
+  |f == One && knockingP b e == False = add ((countPlayerScore (simplePlayer b e) e),0) (playTurn (remove (fst (simplePlayer b e)) b) d (resMaybe (playDom (fst(simplePlayer b e)) (snd(simplePlayer b e)) e)) Two)
+  |f == Two && knockingP d e == False = add (playTurn b (remove (fst (simplePlayer d e)) d) (resMaybe (playDom (fst(simplePlayer d e)) (snd(simplePlayer d e)) e)) One) (0,(countPlayerScore (simplePlayer d e) e)) 
+  |otherwise = (0,0)
+ 
+ playDomsRound :: Int->(Int,Int)
+ 
+ playDomsRound z = playTurn a b c d
+  where
+   a = take 9 (shuffleDom z)
+   b = take 9 (drop 9 (shuffleDom z))
+   c = []
+   d = One
