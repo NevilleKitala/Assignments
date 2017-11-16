@@ -445,28 +445,38 @@ module Doms1 where
  score = (0,0)
 
  --Count Player score afterPlay
- countPlayerScore :: (Dom,End)->Board->Int
+ countScore :: (Dom,End)->Board->Int
  
- countPlayerScore  _ [] = 0
+ countScore  _ [] = 0
  
- countPlayerScore (a,b) c
+ countScore (a,b) c
   |b == L && goesLP a c== True = domScore a L
   |b == L && goesRP a c==True = domScore a R
   |otherwise = 0
  
- --play one turn
+ --play one Round
+ 
  playTurn :: Hand->Hand->Board->Turn->(Int,Int)
 
  playTurn b d e f
-  |f == One && knockingP b e == False = add ((countPlayerScore (simplePlayer b e) e),0) (playTurn (remove (fst (simplePlayer b e)) b) d (resMaybe (playDom (fst(simplePlayer b e)) (snd(simplePlayer b e)) e)) Two)
-  |f == Two && knockingP d e == False = add (playTurn b (remove (fst (simplePlayer d e)) d) (resMaybe (playDom (fst(simplePlayer d e)) (snd(simplePlayer d e)) e)) One) (0,(countPlayerScore (simplePlayer d e) e)) 
+  |f == One && knockingP b e == False = add (y,0) (playTurn (remove (fst w) b) d (resMaybe (playDom (fst w) (snd w) e)) Two)
+  |f == Two && knockingP d e == False = add (playTurn b (remove (fst x) d) (resMaybe (playDom (fst x) (snd x) e)) One) (0,z) 
   |otherwise = (0,0)
+  where
+   w = simplePlayer b e
+   x = simplePlayer d e
+   y = countScore w e
+   z = countScore x e
  
- playDomsRound :: Int->(Int,Int)
+ --Initialises and plays the game
  
- playDomsRound z = playTurn a b c d
+ playDomsRound :: DomsPlayer->DomsPlayer->Int->(Int,Int)
+ 
+ playDomsRound x y z = playTurn a b c d
   where
    a = take 9 (shuffleDom z)
    b = take 9 (drop 9 (shuffleDom z))
    c = []
    d = One
+   x = simplePlayer a c
+   y = simplePlayer b c
