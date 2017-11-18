@@ -38,9 +38,6 @@ module Doms1 where
  type Hand = [Dom] -- doms in player's hand
  
  type Board = [Dom] -- doms played: head of board is left end, last is right end. Order maintained e.g [(1,6),(6,6),(6,3), (3,1)]
- 
- board :: Board
- board = []
 
  type DomList = [Dom] -- list of Doms which is neither a Hand or a Board
  
@@ -397,7 +394,7 @@ module Doms1 where
   |goesRP h b== True = (h,R)
   |otherwise = simplePlayer t b
 
---Highest Scroring Domino which will play the domino that score the highest.
+{-Highest Scroring Domino which will play the domino that score the highest.
 
  domListScore :: Hand->Board->[Int]
  
@@ -414,10 +411,10 @@ module Doms1 where
   -> compare (n1) (n2)) (zip b a))
 
 
- --hsdPlayer :: DomsPlayer
+ hsdPlayer :: DomsPlayer
  
- --hsdPlayer a b = maxScoreDom (domListScore a b) a
- 
+ hsdPlayer a b = maxScoreDom (domListScore a b) a
+ -}
 ---------------------------------------------------------------------
 
  --shuffle Functions
@@ -428,7 +425,7 @@ module Doms1 where
  shuffleDom :: Int->[Dom]
  
  shuffleDom a =  map fst (sortBy (\((_,_),n1) ((_,_),n2) 
-  -> compare (n1) (n2)) (zip domSet (take 26 (randoms (mkStdGen a):: [Int]))))
+  -> compare (n1) (n2)) (zip domSet (take 28 (randoms (mkStdGen a):: [Int]))))
  
 ---------------------------------------------------------------------
 
@@ -439,10 +436,6 @@ module Doms1 where
  add :: (Int,Int)->(Int,Int)->(Int,Int)
  
  add (a,b) (a1,b1)=(a+a1,b+b1)
- 
- --Variable for the player scores
- 
- score = (0,0)
 
  --Count Player score afterPlay
  countScore :: (Dom,End)->Board->Int
@@ -474,9 +467,9 @@ module Doms1 where
  
  playDomsRound x y z = playTurn a b c d
   where
+   x = simplePlayer a c
+   y = simplePlayer b c
    a = take 9 (shuffleDom z)
    b = take 9 (drop 9 (shuffleDom z))
    c = []
    d = One
-   x = simplePlayer a c
-   y = simplePlayer b c

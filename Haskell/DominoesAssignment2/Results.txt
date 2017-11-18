@@ -1,0 +1,65 @@
+Test results for the part two assignment
+
+variables for the tests:
+
+*Doms1> player1 = simplePlayer
+*Doms1> player2 = simplePlayer
+*Doms1> board = []
+*Doms1> hand2 = [(4,1),(6,3),(2,0),(4,4),(3,3),(4,3),(5,4),(5,2),(6,0)]
+
+simpleplayer:
+ 
+ --should return the first playable domino in the hand and the end to play it.
+ 
+*Doms1> simplePlayer hand1 board
+((3,3),L)
+*Doms1> board = [(5,4)]
+*Doms1> simplePlayer hand1 board
+((3,5),L)
+
+shuffleDom:
+
+ --Should shuffle an existing set of dominos.
+ 
+*Doms1> shuffleDom 9
+[(5,1),(6,1),(5,3),(1,1),(6,2),(1,0),(0,0),
+       (2,2),(5,0),(4,1),(6,3),(2,0),(4,4),
+	         (3,3),(4,3),(5,4),(5,2),(6,0),
+			       (6,5),(4,2),(5,5),(2,1),
+				         (3,0),(4,0),(6,4),
+						       (6,6),(3,1),
+							         (3,2)]
+									 
+add:
+
+ --should take two tuples and add them together
+ 
+*Doms1> add (5,8) (78,1566)
+(83,1574)
+
+countScore:
+
+ --Should return a score value after a domino has been played to the board.
+ 
+*Doms1> a = simplePlayer hand1 board
+*Doms1> a
+((3,3),L)
+*Doms1> countScore a board
+0
+*Doms1> board = [(3,5)]
+*Doms1> countScore a board
+6
+
+playTurn:
+
+ --plays the game and should return a score of both players
+
+*Doms1> playTurn hand1 hand2 board One
+(16,8)
+
+PlayRoundDoms:
+
+ --Plays The game and returns the scores
+ 
+ *Doms1> playDomsRound player1 player2 9
+(20,8)
