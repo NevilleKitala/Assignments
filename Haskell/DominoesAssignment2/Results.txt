@@ -16,6 +16,8 @@ simpleplayer:
 *Doms1> board = [(5,4)]
 *Doms1> simplePlayer hand1 board
 ((3,5),L)
+*Doms1> board = [(6,6),(6,5),(6,4),(6,3)]
+*Doms1> simplePlayer hand1 board
 
 shuffleDom:
 
@@ -30,6 +32,15 @@ shuffleDom:
 						       (6,6),(3,1),
 							         (3,2)]
 									 
+*Doms1> shuffleDom 7889
+[(5,5),(5,3),(5,4),(4,3),(2,2),(6,5),(4,1),
+       (3,0),(4,4),(6,0),(4,0),(4,2),(2,0),
+	         (5,1),(3,3),(0,0),(3,2),(6,3),
+			       (1,0),(3,1),(5,2),(6,1),
+				         (6,6),(1,1),(6,4),
+						       (5,0),(2,1),
+							         (6,2)]
+
 add:
 
  --should take two tuples and add them together
@@ -41,11 +52,13 @@ countScore:
 
  --Should return a score value after a domino has been played to the board.
  
+*Doms1> board = [(5,4)]
 *Doms1> a = simplePlayer hand1 board
 *Doms1> a
-((3,3),L)
+((3,5),L)
 *Doms1> countScore a board
-0
+3
+
 *Doms1> board = [(3,5)]
 *Doms1> countScore a board
 6
