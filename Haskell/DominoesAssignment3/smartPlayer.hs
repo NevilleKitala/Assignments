@@ -27,12 +27,15 @@ module SmartPlayer where
  similar _ [] = []
  
  similar a (h:t)
-  |fst a == fst h || snd a == fst h = h:similar a t
-  |snd a == snd h || fst a == snd h = h:similar a t
+  |b == d || c == d = h:similar a t
+  |c == e || b == e = h:similar a t
   |otherwise = similar a t
+  where
+  (b,c) = a
+  (d,e) = h
 ---------------------------------------------------------------------
- --function to see if the similar dominoes have been played or are in the players hand
- possibleDoms :: [(Dom)]->Hand->Hand->[Dom]
+ --see if the domino has been played or is in the players hand
+ possibleDoms :: [Dom]->Hand->Hand->[Dom]
 
  
  possibleDoms a@(h1:t1) b@(h2:t2) c@(h3:t3)
@@ -48,3 +51,9 @@ module SmartPlayer where
   |x==h = remove x t       
   |otherwise = (h:remove x t)
  
+--------------------------------------------------------------------=
+ --function to adding some tactics to be played
+ tactic1 :: Tactics
+ 
+ tactic1 board playerHand opponent 
+  |if board = 
