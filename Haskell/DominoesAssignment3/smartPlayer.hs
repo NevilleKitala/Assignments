@@ -28,19 +28,23 @@ module SmartPlayer where
  similar a@(b,c) (h:t)
   |b == d || c == d = True
   |b == e || c == e = True
-  |otherwise = False
+  |otherwise = similar a t
   where
   (d,e) = h
 ---------------------------------------------------------------------
  --see if the domino has been played or is in the players hand
- possibleDoms :: [Dom]->Hand->Hand->[Dom]
-
+ possibleDoms :: DomBoard->Hand->[Dom]->[Dom]
  
- possibleDoms a@(h1:t1) b@(h2:t2) c@(h3:t3)
-  |member h1 b == False || member h1 c == False = possibleDoms (remove h1 a) b c
-  |member h1 b == True || member h1 c == True = h1:possibleDoms t1 b c
-  |otherwise = possibleDoms t1 b c
-
+ possibleDoms _ [] [] = []
+ 
+ possibleDoms domBoard@(Board (l1,l2) (r1,r2) h) hand domSet@(h1:t)
+  |member h1 hand == True = x
+  |similar dom domSet == True = x 
+  |otherwise = h1 : x
+  where
+  x = possibleDoms domBoard hand t 
+  y = similar dom domSet
+  (dom,_,_) = last h
 ---------------------------------------------------------------------
  --function to remove a domino from a list of dominoes
  remove :: Eq a => a->[a]->[a]
@@ -69,7 +73,9 @@ module SmartPlayer where
    a = remScore player scores
    ((h1,h2),end) = hsdPlayer hand c player scores
    newHand = remove (h1,h2) hand
- --------------------------------------------------------------------
+   np = notPlayed domSet (played c)
+   opp = possibleDoms c hand np
+---------------------------------------------------------------------
  --find out how many points left to close the game
  remScore :: Player->Scores->Int
  
@@ -78,5 +84,32 @@ module SmartPlayer where
   |player == P2 = 61 - p2
   |otherwise = 0
   
- --------------------------------------------------------------------
+---------------------------------------------------------------------
+ notPlayed :: [Dom]->[Dom]->[Dom]
  
+ notPlayed _ [] = []
+ 
+ notPlayed a@(h:t) b
+  |equal h b = notPlayed t b
+  |otherwise = h : notPlayed t b
+---------------------------------------------------------------------
+ played :: DomBoard->[Dom]
+ 
+ played _ = []
+ 
+ played a@(Board e1 e2 (h1:t1)) = d1 : played (Board e1 e2 t1)
+  where
+   (d1,_,_) = h1
+---------------------------------------------------------------------
+ --find if there is a domino equal to the domino in the dom list
+ 
+ equal :: Dom->[Dom]->Bool
+ 
+ equal _ [] = False
+ 
+ equal a@(h1,t1) b@(h:t)
+  |h1 == h2 && t2 == t1 = True
+  |h2 == t1 && t2 == h1 = True
+  |otherwise = equal a t
+  where
+  (h2,t2) = h
