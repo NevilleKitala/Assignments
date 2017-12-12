@@ -10,7 +10,6 @@ module SmartPlayer where
  15/12/2017
  -}
 
- type Tactics = [Dom]->Hand->History->Dom
 ---------------------------------------------------------------------
  --function to find members in a list of dominoes
  
@@ -51,9 +50,14 @@ module SmartPlayer where
   |x==h = remove x t       
   |otherwise = (h:remove x t)
  
---------------------------------------------------------------------=
+---------------------------------------------------------------------
  --function to adding some tactics to be played
- tactic1 :: Tactics
+ smartPlayer :: DomsPlayer
  
- tactic1 board playerHand opponent 
-  |if board = 
+ smartPlayer hand InitBoard player scores = hsdPlayer hand InitBoard player scores
+ 
+ smartPlayer hand (board dom1 dom2 history) player scores@(h,t) = a
+  where 
+   a = hsdPlayer hand domBoard player scores
+   (b,_) = a
+ --------------------------------------------------------------------
