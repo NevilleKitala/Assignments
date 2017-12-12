@@ -17,20 +17,19 @@ module SmartPlayer where
  
  member a (h:t)
   |a == h = True
-  |otherwise = member a t
+  |otherwise = False
  
 ---------------------------------------------------------------------
  --function to find similar dominoes
- similar :: Dom->[Dom]->[Dom]
+ similar :: Dom->[Dom]->Bool
  
- similar _ [] = []
+ similar _ [] = False
  
- similar a (h:t)
-  |b == d || c == d = h:similar a t
-  |c == e || b == e = h:similar a t
-  |otherwise = similar a t
+ similar a@(b,c) (h:t)
+  |b == d || c == d = True
+  |b == e || c == e = True
+  |otherwise = False
   where
-  (b,c) = a
   (d,e) = h
 ---------------------------------------------------------------------
  --see if the domino has been played or is in the players hand
@@ -47,17 +46,37 @@ module SmartPlayer where
  remove :: Eq a => a->[a]->[a]
  remove _ [] = []   
  remove x (h:t)         
-  |x==h = remove x t       
+  |x==h = t       
   |otherwise = (h:remove x t)
  
 ---------------------------------------------------------------------
  --function to adding some tactics to be played
+ {-using b to stand for the history body and n to represent the
+ newest addition to history-}
  smartPlayer :: DomsPlayer
  
- smartPlayer hand InitBoard player scores = hsdPlayer hand InitBoard player scores
+ smartPlayer hand InitBoard player scores
+  |member (5,4) hand  == True = ((5,4),L)
+  |otherwise = hsdPlayer hand InitBoard player scores
  
- smartPlayer hand (board dom1 dom2 history) player scores@(h,t) = a
+ smartPlayer hand c@(Board (l1,l2) (r1,r2) h@(b:n)) player scores@(s1,s2)
+  |a == sp = ((h1,h2),end)
+  |similar (h1,h2) hand == True = ((h1,h2),end)
+  |similar (h1,h2) hand == False = smartPlayer newHand c player scores
+  |otherwise = ((h1,h2),end)
   where 
-   a = hsdPlayer hand domBoard player scores
-   (b,_) = a
+   sp = if(player == P1) then s1 else s2
+   a = remScore player scores
+   ((h1,h2),end) = hsdPlayer hand c player scores
+   newHand = remove (h1,h2) hand
  --------------------------------------------------------------------
+ --find out how many points left to close the game
+ remScore :: Player->Scores->Int
+ 
+ remScore player scores@(p1,p2)
+  |player == P1 = 61 - p1
+  |player == P2 = 61 - p2
+  |otherwise = 0
+  
+ --------------------------------------------------------------------
+ 
