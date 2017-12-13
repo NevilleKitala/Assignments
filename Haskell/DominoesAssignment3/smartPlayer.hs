@@ -113,3 +113,12 @@ module SmartPlayer where
   |otherwise = equal a t
   where
   (h2,t2) = h
+  
+ --------------------------------------------------------------------
+ --define a loosing function to tell the smart player it is about to loose
+  losing :: Scores->Player->Bool
+  
+  losing score@(h,t) p
+   |p == P1 && t>h = True
+   |p == P2 && h>t = True
+   |otherwise = False
