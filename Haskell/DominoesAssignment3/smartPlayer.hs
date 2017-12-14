@@ -57,13 +57,13 @@ module SmartPlayer where
  --function to adding some tactics to be played
  {-using b to stand for the history body and n to represent the
  newest addition to history-}
- smartPlayer :: DomsPlayer
+ smartPlayer1 :: DomsPlayer
  
- smartPlayer hand InitBoard player scores
+ smartPlayer1 hand InitBoard player scores
   |member (5,4) hand  == True = ((5,4),L)
   |otherwise = hsdPlayer hand InitBoard player scores
  
- smartPlayer hand c@(Board (l1,l2) (r1,r2) h@(b:n)) player scores@(s1,s2)
+ smartPlayer1 hand c@(Board (l1,l2) (r1,r2) h@(b:n)) player scores@(s1,s2)
   |a == sp = ((h1,h2),end)
   |similar (h1,h2) hand == True = ((h1,h2),end)
   |similar (h1,h2) hand == False = smartPlayer newHand c player scores
@@ -75,6 +75,12 @@ module SmartPlayer where
    newHand = remove (h1,h2) hand
    np = notPlayed domSet (played c)
    opp = possibleDoms c hand np
+ 
+ smartPlayer2 :: DomsPlayer
+ smartPlayer2 hand InitBoard player score = hsdPlayer hand InitBoard player scores
+ 
+ smartPlayer2 c@(Board (l1,l2) (r1,r2) h@(b:n)) player scores@(s1,s2)
+  |
 ---------------------------------------------------------------------
  --find out how many points left to close the game
  remScore :: Player->Scores->Int
