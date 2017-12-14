@@ -82,7 +82,6 @@ module SmartPlayer where
  smartPlayer2 hand InitBoard player scores = hsdPlayer hand InitBoard player scores
  
  smartPlayer2 hand c@(Board (l1,l2) (r1,r2) h@(b:n)) player scores@(s1,s2)
-  |a == sp = ((h1,h2),end)
   |similar (h1,h2) hand == False = smartPlayer1 newHand c player scores
   |loosing (s1,s2) player == True = hsdPlayer oppStitch c player scores
   |similar (h1,h2) hand == True = ((h1,h2),end)
@@ -142,8 +141,8 @@ module SmartPlayer where
  loosing (0,0) _ = False
   
  loosing (h,t) p
-  |p == P1 && t>h && t>52= True
-  |p == P2 && h>t && h>52= True
+  |p == P1 && t>h && t>52 = True
+  |p == P2 && h>t && h>52 = True
   |otherwise = False
    
  --------------------------------------------------------------------
@@ -157,6 +156,15 @@ module SmartPlayer where
   |otherwise = contain t b
   where
    (l1,l2) = h
+    --------------------------------------------------------------------
+ --Returns a domino if it is contained in a hand
+ containDom :: Hand->Dom->Hand
+ 
+ containDom [] _ = []
+ 
+ containDom a@(h:t) b
+  |h == b = h: containDom t b
+  |otherwise = containDom t b
  --------------------------------------------------------------------
  --Checks if opponent is knocking and then get the dominoes that make it knock.
  stitch :: DomBoard->Hand->Player->[Dom]
