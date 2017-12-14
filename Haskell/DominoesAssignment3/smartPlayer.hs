@@ -39,7 +39,7 @@ module SmartPlayer where
  
  possibleDoms domBoard@(Board (l1,l2) (r1,r2) h) hand domSet@(h1:t)
   |member h1 hand == True = x
-  |similar dom domSet == True = x 
+  |similar dom domSet == True = x
   |otherwise = h1 : x
   where
   x = possibleDoms domBoard hand t 
@@ -64,9 +64,10 @@ module SmartPlayer where
   |otherwise = hsdPlayer hand InitBoard player scores
  
  smartPlayer1 hand c@(Board (l1,l2) (r1,r2) h@(b:n)) player scores@(s1,s2)
+  |loosing (s1,s2) player == True = hsdPlayer oppStitch c player scores
   |a == sp = ((h1,h2),end)
   |similar (h1,h2) hand == True = ((h1,h2),end)
-  |similar (h1,h2) hand == False = smartPlayer newHand c player scores
+  |similar (h1,h2) hand == False = smartPlayer1 newHand c player scores
   |otherwise = ((h1,h2),end)
   where 
    sp = if(player == P1) then s1 else s2
@@ -74,13 +75,27 @@ module SmartPlayer where
    ((h1,h2),end) = hsdPlayer hand c player scores
    newHand = remove (h1,h2) hand
    np = notPlayed domSet (played c)
-   opp = possibleDoms c hand np
+   oppStitch = stitch c hand player
  
  smartPlayer2 :: DomsPlayer
- smartPlayer2 hand InitBoard player score = hsdPlayer hand InitBoard player scores
  
- smartPlayer2 c@(Board (l1,l2) (r1,r2) h@(b:n)) player scores@(s1,s2)
-  |
+ smartPlayer2 hand InitBoard player scores = hsdPlayer hand InitBoard player scores
+ 
+ smartPlayer2 hand c@(Board (l1,l2) (r1,r2) h@(b:n)) player scores@(s1,s2)
+  |a == sp = ((h1,h2),end)
+  |similar (h1,h2) hand == False = smartPlayer1 newHand c player scores
+  |loosing (s1,s2) player == True = hsdPlayer oppStitch c player scores
+  |similar (h1,h2) hand == True = ((h1,h2),end)
+  |otherwise = ((h1,h2),end)
+  where 
+   sp = if(player == P1) then s1 else s2
+   a = remScore player scores
+   ((h1,h2),end) = hsdPlayer hand c player scores
+   newHand = remove (h1,h2) hand
+   np = notPlayed domSet (played c)
+   oppStitch = stitch c hand player
+ 
+ 
 ---------------------------------------------------------------------
  --find out how many points left to close the game
  remScore :: Player->Scores->Int
@@ -101,11 +116,11 @@ module SmartPlayer where
 ---------------------------------------------------------------------
  played :: DomBoard->[Dom]
  
- played _ = []
+ played InitBoard = []
  
- played a@(Board e1 e2 (h1:t1)) = d1 : played (Board e1 e2 t1)
+ played (Board e1 e2 (h:t)) = d : played (Board e1 e2 t)
   where
-   (d1,_,_) = h1
+   (d,_,_) = h
 ---------------------------------------------------------------------
  --find if there is a domino equal to the domino in the dom list
  
@@ -121,10 +136,36 @@ module SmartPlayer where
   (h2,t2) = h
   
  --------------------------------------------------------------------
- --define a loosing function to tell the smart player it is about to loose
-  losing :: Scores->Player->Bool
+ --define a loosing function to tell the smart player it is losing
+ loosing :: Scores->Player->Bool
   
-  losing score@(h,t) p
-   |p == P1 && t>h = True
-   |p == P2 && h>t = True
-   |otherwise = False
+ loosing (0,0) _ = False
+  
+ loosing (h,t) p
+  |p == P1 && t>h && t>52= True
+  |p == P2 && h>t && h>52= True
+  |otherwise = False
+   
+ --------------------------------------------------------------------
+ --Returns a list of dominoes from a hand containing a cerain value.
+ contain :: Hand->Int->Hand
+ 
+ contain [] _ = []
+ 
+ contain a@(h:t) b
+  |l1 == b || l2 == b = h: contain t b
+  |otherwise = contain t b
+  where
+   (l1,l2) = h
+ --------------------------------------------------------------------
+ --Checks if opponent is knocking and then get the dominoes that make it knock.
+ stitch :: DomBoard->Hand->Player->[Dom]
+ 
+ stitch InitBoard hand player= []
+ 
+ stitch (Board (l1,l2) (r1,r2) h) hand player
+  |player1 == player = contain hand l1 ++ contain hand r2 
+  |otherwise = hand
+  where
+  (d,player1,_) = last h
+  (i1,i2) = d
