@@ -32,20 +32,6 @@ module SmartPlayer where
   where
   (d,e) = h
 ---------------------------------------------------------------------
- --see if the domino has been played or is in the players hand
- possibleDoms :: DomBoard->Hand->[Dom]->[Dom]
- 
- possibleDoms _ [] [] = []
- 
- possibleDoms domBoard@(Board (l1,l2) (r1,r2) h) hand domSet@(h1:t)
-  |member h1 hand == True = x
-  |similar dom domSet == True = x
-  |otherwise = h1 : x
-  where
-  x = possibleDoms domBoard hand t 
-  y = similar dom domSet
-  (dom,_,_) = last h
----------------------------------------------------------------------
  --function to remove a domino from a list of dominoes
  remove :: Eq a => a->[a]->[a]
  remove _ [] = []   
@@ -65,7 +51,7 @@ module SmartPlayer where
  
  smartPlayer1 hand c player scores@(s1,s2)
   |a < 9 && length pd > 0 = hsdPlayer pd c player scores
-  |loosing (s1,s2) player == True = hsdPlayer oppStitch c player scores
+  |losing (s1,s2) player == True = hsdPlayer oppStitch c player scores
   |similar (h1,h2) hand == True = ((h1,h2),end)
   |similar (h1,h2) hand == False = smartPlayer1 newHand c player scores
   |otherwise = ((h1,h2),end)
@@ -75,23 +61,26 @@ module SmartPlayer where
    newHand = remove (h1,h2) hand
    oppStitch = stitch c hand player
    pd = pickDom (findDom (listScore hand c) hand a)
-   
- smartPlayer2 :: DomsPlayer
  
- smartPlayer2 hand InitBoard player scores = hsdPlayer hand InitBoard player scores
+ testPlayers :: DomsPlayer
  
- smartPlayer2 hand c player scores
-  |similar (h1,h2) hand == False = smartPlayer2 newHand c player scores
-  |loosing scores player == True = hsdPlayer oppStitch c player scores
+ testPlayers hand InitBoard player scores
+  |member (5,4) hand  == True = ((5,4),L)
+  |otherwise = hsdPlayer hand InitBoard player scores
+ 
+ testPlayers hand c player scores@(s1,s2)
+  |losing (s1,s2) player == True = hsdPlayer oppStitch c player scores
+  |losing (s1,s2) player == True = hsdPlayer oppStitch c player scores
   |similar (h1,h2) hand == True = ((h1,h2),end)
+  |similar (h1,h2) hand == False = smartPlayer1 newHand c player scores
+  |a < 9 && length pd > 0 = hsdPlayer pd c player scores
   |otherwise = ((h1,h2),end)
   where 
    a = remScore player scores
    ((h1,h2),end) = hsdPlayer hand c player scores
    newHand = remove (h1,h2) hand
    oppStitch = stitch c hand player
- 
- 
+   pd = pickDom (findDom (listScore hand c) hand a)
 ---------------------------------------------------------------------
  --find out how many points left to close the game
  remScore :: Player->Scores->Int
@@ -103,11 +92,11 @@ module SmartPlayer where
   
  --------------------------------------------------------------------
  --define a loosing function to tell the smart player it is losing
- loosing :: Scores->Player->Bool
+ losing :: Scores->Player->Bool
   
- loosing (0,0) _ = False
+ losing (0,0) _ = False
   
- loosing (h,t) p
+ losing (h,t) p
   |p == P1 && t>h && t>52 = True
   |p == P2 && h>t && h>52 = True
   |otherwise = False
