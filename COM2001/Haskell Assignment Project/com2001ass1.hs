@@ -13,7 +13,7 @@
 
 type Input  = Int
 type Output = Int
- 
+
 -- A program is something that tells a computer how to
 -- move from one configuration to another, how to
 -- recognize when a configuration represents a valid
@@ -30,21 +30,21 @@ class (Eq cfg) => ProgrammableComputer cfg where
   runProgram p is = runFrom p (initialise p is)
 
 
-  
+
 -- The BATcomputer has just 3 types of instruction
 -- CLR b        == empty box b
 -- INC b        == add a token to box b
--- JEQ b1 b2 t  == if boxes b1 and b2 contain the same 
+-- JEQ b1 b2 t  == if boxes b1 and b2 contain the same
 --                 number of tokens, jump to instruction t
 --
 data Instruction
-  = CLR {box :: Int} 
+  = CLR {box :: Int}
   | INC {box :: Int}
-  | JEQ {box1   :: Int, 
+  | JEQ {box1   :: Int,
          box2   :: Int,
          target :: Int}
   deriving (Eq, Show)
-   
+
 type Program = [Instruction]
 
 
@@ -55,7 +55,9 @@ type Program = [Instruction]
 -- more boxes.  What is the highest box number used
 -- anywhere in the program?
 maxBoxNum :: Program -> Int
-maxBoxNum ...
+maxBoxNum [] = 0
+maxBoxNum (h:t)
+  |
 
 
 -- The configuration of a BATcomputer is given once
@@ -66,11 +68,11 @@ data BATConfig = BATConfig {
     counter :: Int
     } deriving (Eq)
 
-    
+
 -- PROBLEM 2. YOUR CODE HERE
 -- --------------------------
 instance Show BATConfig where
-    ...
+    show BATConfig = "boxes =" ++ show boxes ++ "; counter" ++ show counter
 
 
 
@@ -80,9 +82,10 @@ instance Show BATConfig where
 -- Box 0 can be used by programs for calculations.
 instance ProgrammableComputer BATConfig  where
     -- PROBLEM 3: initialise   :: Program -> [Input] -> cfg
-    initialise ...
+    initialise = BATConfig [1] 1
     -- PROBLEM 4: acceptState  :: Program -> cfg -> Bool
-    acceptState ...
+    acceptState
+      |length boxes == maxBoxNum BATConfig
     -- PROBLEM 5: doNextMove   :: Program -> cfg -> cfg
     doNextMove ...
     -- PROBLEM 6: runFrom      :: Program -> cfg -> cfg
@@ -93,7 +96,7 @@ instance ProgrammableComputer BATConfig  where
 
 -- This function is included to help with testing. Running
 -- "execute p xs" should show the output generated when
--- running program p with user input(s) xs  
+-- running program p with user input(s) xs
 execute :: Program -> [Input] -> Output
 execute p ins = getOutput ((runProgram p ins) :: BATConfig)
 
@@ -121,7 +124,7 @@ p1 *->* p2 = ...
 -- program to compute B1 = B1 + B2
 adder :: Program
 adder = ...
-    
+
 
 -- PROBLEM 11. YOUR CODE HERE
 -- ---------------------------
