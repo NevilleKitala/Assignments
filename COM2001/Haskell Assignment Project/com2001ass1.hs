@@ -56,8 +56,7 @@ type Program = [Instruction]
 -- anywhere in the program?
 maxBoxNum :: Program -> Int
 maxBoxNum [] = 0
-maxBoxNum (h:t)
-  |
+maxBoxNum a = maximumBy(\(n1)(n2) -> compare (n1) (n2)) a
 
 
 -- The configuration of a BATcomputer is given once
@@ -82,12 +81,13 @@ instance Show BATConfig where
 -- Box 0 can be used by programs for calculations.
 instance ProgrammableComputer BATConfig  where
     -- PROBLEM 3: initialise   :: Program -> [Input] -> cfg
-    initialise = BATConfig [1] 1
+    initialise = BATConfig [1]
     -- PROBLEM 4: acceptState  :: Program -> cfg -> Bool
     acceptState
-      |length boxes == maxBoxNum BATConfig
+      |length boxes == maxBoxNum BATConfig = true
+      |otherwise = false
     -- PROBLEM 5: doNextMove   :: Program -> cfg -> cfg
-    doNextMove ...
+    doNextMove =[counter + 1] BATConfig
     -- PROBLEM 6: runFrom      :: Program -> cfg -> cfg
     runFrom ...
     -- PROBLEM 7: getOutput    :: cfg -> Output
@@ -139,5 +139,14 @@ copyBox m n = ...
 addXY :: Int -> Int -> Program
 addXY x y = ...
 
+isList :: [int] -> Bool
+isList (h:t)
+  |
 
+sort :: [int] -> [int]
+sort (h:t)
+  |x > h = [x,h] : (sort t)
+  |otherwise = sort t
+  where
+  t = (x:xs)
 -- END OF TEMPLATE FILE
